@@ -1,22 +1,32 @@
 import React, { Component } from 'react'
-import { MDBDataTable } from 'mdbreact';
+import { MDBDataTable, MDBBtn } from 'mdbreact';
+import AddDatas from './AddDatas'
+import EditDatas from './EditDatas'
 
 class Datas extends Component {
     state = {
         data: null
     };
 
-    componentDidMount() {
-        //fetch("158.140.190.214:4242/api/location/detail").then(response => response.json()).;
+    handleGetData = () => {
         fetch("http://158.140.190.214:4242/api/location/detail")
             .then(response => response.json())
             .then(data => this.setState({ data }));
+    }
 
+    componentDidMount() {
+        this.handleGetData();
     }
     render() {
-        console.log(this.state.data);
+        let count = 1;
         let data = {
             columns: [
+                {
+                    label: 'No',
+                    field: 'no',
+                    sort: 'desc',
+                    width: 100
+                },
                 {
                     label: 'Name',
                     field: 'name',
@@ -52,26 +62,36 @@ class Datas extends Component {
                     field: 'lat',
                     sort: 'asc',
                     width: 100
+                },
+                {
+                    label: 'Action',
+                    field: 'id',
+                    sort: 'asc',
+                    width: 80
                 }
             ],
             rows: this.state.data ? (
                 this.state.data.map(data => {
                     return {
+                        no: count++,
                         name: data.name,
                         building: data.building,
                         city: data.city,
                         street: data.street,
                         long: data.coordinate.long,
-                        lat: data.coordinate.lat
+                        lat: data.coordinate.lat,
+                        id: <EditDatas id={data._id.$oid} onGetData={this.handleGetData} />
                     }
                 })) : null
         };
         return (
-            <div className="container">
+            <div className="container" >
+                <AddDatas onGetData={this.handleGetData} />
                 <MDBDataTable
                     striped
                     bordered
                     hover
+                    order={['no', 'desc']}
                     data={data}
                 />
             </div>
