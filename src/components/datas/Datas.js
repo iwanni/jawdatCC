@@ -11,12 +11,14 @@ class Datas extends Component {
     handleGetData = () => {
         fetch("http://158.140.190.214:4242/api/location/detail")
             .then(response => response.json())
-            .then(data => this.setState({ data }));
+            .then(data => this.setState({ data }))
+            .catch(error => alert(error));
     }
 
     componentDidMount() {
         this.handleGetData();
     }
+
     render() {
         let count = 1;
         let data = {
@@ -71,7 +73,7 @@ class Datas extends Component {
                 }
             ],
             rows: this.state.data ? (
-                this.state.data.map(data => {
+                [...this.state.data].reverse().map(data => {
                     return {
                         no: count++,
                         name: data.name,

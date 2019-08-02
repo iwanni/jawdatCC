@@ -4,11 +4,26 @@ import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn } from 'mdbreact';
 export class SignIn extends Component {
     state = {
         username: '',
-        password: ''
+        password: '',
+        isAuthenticate: false
     }
+
+
     handleSubmit = (e) => {
         e.preventDefault();
         console.log(this.state);
+
+        if (this.state.username === "jawdat" && this.state.password === "jawdat") {
+            //console.log(this.props)
+            //{ () => this.props.onSignIn }
+            this.setState({
+                isAuthenticate: true
+            })
+            this.props.history.push({
+                pathname: '/dashboard',
+                state: { isAuthenticate: true, username: this.state.username }
+            })
+        }
     }
 
     handleChange = (e) => {
@@ -20,16 +35,6 @@ export class SignIn extends Component {
     render() {
         return (
             <div className="">
-                {/* <form className="form-signin" onSubmit={this.handleSubmit}>
-                    <img className="mb-4" src="" alt="" width="72" height="72" />
-                    <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
-                    <label htmlFor="inputEmail" className="sr-only">Username</label>
-                    <input onChange={this.handleChange} type="text" id="username" className="form-control" placeholder="Username" required autoFocus />
-                    <label htmlFor="inputPassword" className="sr-only">Password</label>
-                    <input onChange={this.handleChange} type="password" id="password" className="form-control" placeholder="Password" required />
-
-                    <button className="btn btn-lg btn-primary btn-block">Sign in</button>
-                </form> */}
 
                 <MDBContainer className="mt-3">
                     <MDBRow>
