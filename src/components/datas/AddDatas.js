@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { MDBContainer, MDBBtn, MDBModal, MDBModalBody, MDBModalHeader, MDBModalFooter, MDBInput } from 'mdbreact';
+import { connect } from 'react-redux'
+import { createData, getData } from '../../store/actions/dataActions'
+
 
 class AddDatas extends Component {
     state = {
@@ -32,27 +35,31 @@ class AddDatas extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         e.target.className += " was-validated";
-        //console.log(this.state.data, "state");
 
-        console.log(this.validateForm());
+        console.log(this.props, "proppp");
         if (this.validateForm()) {
-            fetch("http://158.140.190.214:4242/api/location/add", {
-                method: 'post',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    "name": this.state.data.name,
-                    "building": this.state.data.building,
-                    "city": this.state.data.city,
-                    "street": this.state.data.street,
-                    "coordinate": {
-                        "long": this.state.data.longitude,
-                        "lat": this.state.data.latitude
-                    }
-                })
-            })
-                .then(this.toggle)
-                .then(this.props.onGetData)
-                .catch(error => alert(error));
+            this.props.createData(this.state);
+            this.props.onGetData();
+            this.toggle()
+
+
+            // fetch("http://158.140.190.214:4242/api/location/add", {
+            //     method: 'post',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({
+            //         "name": this.state.data.name,
+            //         "building": this.state.data.building,
+            //         "city": this.state.data.city,
+            //         "street": this.state.data.street,
+            //         "coordinate": {
+            //             "long": this.state.data.longitude,
+            //             "lat": this.state.data.latitude
+            //         }
+            //     })
+            // })
+            //     .then(this.toggle)
+            //     .then(this.props.onGetData)
+            //     .catch(error => alert(error));
         }
     };
 
@@ -93,4 +100,11 @@ class AddDatas extends Component {
     }
 }
 
-export default AddDatas;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        createData: (data) => dispatch(createData(data)),
+        getData: () => dispatch(getData())
+    }
+}
+
+export default connect(null, mapDispatchToProps)(AddDatas);

@@ -1,24 +1,25 @@
 import React, { Component } from 'react'
 import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn } from 'mdbreact';
+import { connect } from "react-redux";
+import { signIn } from '../../store/actions/authActions'
 
 export class SignIn extends Component {
     state = {
-        username: '',
-        password: '',
+        username: null,
+        password: null,
         isAuthenticate: false
     }
-
 
     handleSubmit = (e) => {
         e.preventDefault();
         console.log(this.state);
 
+        this.props.signIn(this.state);
+
         if (this.state.username === "jawdat" && this.state.password === "jawdat") {
-            //console.log(this.props)
-            //{ () => this.props.onSignIn }
-            this.setState({
-                isAuthenticate: true
-            })
+            // this.setState({
+            //     isAuthenticate: true
+            // })
             this.props.history.push({
                 pathname: '/dashboard',
                 state: { isAuthenticate: true, username: this.state.username }
@@ -76,4 +77,10 @@ export class SignIn extends Component {
     }
 }
 
-export default SignIn
+const mapDispatchToProps = (dispatch) => {
+    return {
+        signIn: (cred) => dispatch(signIn(cred))
+    }
+}
+
+export default connect(null, mapDispatchToProps)(SignIn)

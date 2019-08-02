@@ -2,17 +2,20 @@ import React, { Component } from 'react'
 import { MDBDataTable, MDBBtn } from 'mdbreact';
 import AddDatas from './AddDatas'
 import EditDatas from './EditDatas'
+import { connect } from "react-redux";
+import { getData } from '../../store/actions/dataActions'
 
 class Datas extends Component {
-    state = {
-        data: null
-    };
+    // state = {
+    //     data: null
+    // };
 
     handleGetData = () => {
-        fetch("http://158.140.190.214:4242/api/location/detail")
-            .then(response => response.json())
-            .then(data => this.setState({ data }))
-            .catch(error => alert(error));
+        this.props.getData();
+        // fetch("http://158.140.190.214:4242/api/location/detail")
+        //     .then(response => response.json())
+        //     .then(data => this.setState({ data }))
+        //     .catch(error => alert(error));
     }
 
     componentDidMount() {
@@ -20,6 +23,9 @@ class Datas extends Component {
     }
 
     render() {
+        console.log(this.props, "prop")
+
+        //const { data } = this.props;
         let count = 1;
         let data = {
             columns: [
@@ -72,8 +78,8 @@ class Datas extends Component {
                     width: 80
                 }
             ],
-            rows: this.state.data ? (
-                [...this.state.data].reverse().map(data => {
+            rows: this.props.data ? (
+                [...this.props.data].reverse().map(data => {
                     return {
                         no: count++,
                         name: data.name,
@@ -101,4 +107,17 @@ class Datas extends Component {
     }
 }
 
-export default Datas
+const mapStateToProps = state => {
+    return {
+        data: state.data.data
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getData: () => dispatch(getData())
+    }
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Datas)

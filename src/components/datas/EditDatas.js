@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { MDBContainer, MDBBtn, MDBModal, MDBModalBody, MDBModalHeader, MDBModalFooter, MDBInput } from 'mdbreact';
+import { connect } from 'react-redux'
+import { editData, getData } from '../../store/actions/dataActions'
 
 class EditDatas extends Component {
     state = {
@@ -10,7 +12,8 @@ class EditDatas extends Component {
             city: null,
             street: null,
             longitude: null,
-            latitude: null
+            latitude: null,
+            id: this.props.id
         }
     }
 
@@ -35,23 +38,27 @@ class EditDatas extends Component {
 
         console.log(this.validateForm())
         if (this.validateForm()) {
-            fetch("http://158.140.190.214:4242/api/location/edit/" + this.props.id, {
-                method: 'post',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    "name": this.state.data.name,
-                    "building": this.state.data.building,
-                    "city": this.state.data.city,
-                    "street": this.state.data.street,
-                    "coordinate": {
-                        "long": this.state.data.longitude,
-                        "lat": this.state.data.latitude
-                    }
-                })
-            })
-                .then(this.toggle)
-                .then(this.props.onGetData)
-                .catch(error => alert(error));
+            this.props.editData(this.state);
+            this.props.onGetData();
+            this.toggle();
+
+            // fetch("http://158.140.190.214:4242/api/location/edit/" + this.props.id, {
+            //     method: 'post',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({
+            //         "name": this.state.data.name,
+            //         "building": this.state.data.building,
+            //         "city": this.state.data.city,
+            //         "street": this.state.data.street,
+            //         "coordinate": {
+            //             "long": this.state.data.longitude,
+            //             "lat": this.state.data.latitude
+            //         }
+            //     })
+            // })
+            //     .then(this.toggle)
+            //     .then(this.props.onGetData)
+            //     .catch(error => alert(error));
         }
     };
 
@@ -92,4 +99,11 @@ class EditDatas extends Component {
     }
 }
 
-export default EditDatas;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        editData: (data) => dispatch(editData(data)),
+        getData: () => dispatch(getData())
+    }
+}
+
+export default connect(null, mapDispatchToProps)(EditDatas);
