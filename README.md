@@ -1,4 +1,5 @@
 Auth
+The fake auth is using static code, because there is no API for get any username&password
 Username: jawdat
 Password: jawdat
 
